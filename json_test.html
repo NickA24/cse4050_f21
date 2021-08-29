@@ -1,1 +1,19 @@
+<!DOCTYPE html>
 
+<p>
+This is a file with a script element.
+</p>
+
+<script>
+// o => s;
+const o = { x: 3, y: -4 };
+const s = JSON.stringify(o);
+console.log("using stringify:");
+console.log(s);
+
+// s => 0;
+const s1 = "{\"a\": 30, \"b\": 100}";
+const o1 = JSON.parse(s1);
+console.log("using parse:");
+console.log(o1);
+</script>
