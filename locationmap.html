@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Locator Map</title>
+  <style type="text/css">
+    /* Set the size of the div element that contains the map */
+    #map {
+      height: 400px;
+      width: 50%;
+    }
+  </style>
+</head>
+<!--This program was made using the Google Maps
+JavaScript API documentaion, guides, and examples-->
+<body>
+  <div id="map"></div>
+
+  <script>
+    let map, bubbleMarker;
+
+      function initMap() {
+        //Initialize the map over Washington D.C.
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 38.889248, lng: -77.050636 },
+          zoom: 8,
+        });
+
+        //Marker that will show your location
+        bubbleMarker = new google.maps.InfoWindow();
+
+        //setting up button to click for finding location
+        const button = document.createElement("button");
+        button.textContent = "Find current location";
+        button.classList.add("custom-map-control-button");
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(button);
+
+        //button will listen for a click
+        button.addEventListener("click", () => {
+          // Attempt geolocation
+          if (navigator.geolocation) {
+            //grabs your location using W3C Geolocation standard
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                const pos = {
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                };
+                //if geolocation succeeds, set it at your loction, set the text
+                //open the map, and center it on your location
+                bubbleMarker.setPosition(pos);
+                bubbleMarker.setContent("Your location");
+                bubbleMarker.open(map);
+                map.setCenter(pos);
+              },
+              () => {  //geostatus ?
+                geoLocationError(true, bubbleMarker, map.getCenter());
+              }
+            );
+          } else {  //geostatus :
+            geoLocationError(false, bubbleMarker, map.getCenter());
+          }
+        });
+      }
+
+    function geoLocationError(geostatus, bubbleMarker, pos) {
+      bubbleMarker.setPosition(pos);
+      bubbleMarker.setContent(
+        geostatus
+          ? "Error: The Geolocation service failed."
+          : "Error: Your browser doesn't support geolocation."
+      );
+      bubbleMarker.open(map);//open the map but marker has err msg inside
+    }
+  </script>
+
+
+  <!-- API key authentication and loads API library -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7xjD9kr6eJG_vSrbuJ0j2Moqd5a6A_6Y&callback=initMap&libraries=&v=weekly"
+    async
+  ></script>
+</body>
+</html>
